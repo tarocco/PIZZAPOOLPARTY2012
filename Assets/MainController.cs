@@ -9,7 +9,8 @@ using UnityEngine.SceneManagement;
 
 public class MainController : MonoBehaviour
 {
-
+    private bool PriorInMenu = false;
+    private bool PriorProgramCursorHidden = false;
     public async Task LoadScenes(IEnumerable<string> scene_names)
     {
         if (!scene_names.Any())
@@ -66,14 +67,21 @@ public class MainController : MonoBehaviour
 
     public async Task LoadProgram(string program_name)
     {
+        PriorInMenu = false;
+        PriorProgramCursorHidden = false;
+        UpdateCursorState(false, false);
+
         await UnloadAllScenes();
         await LoadScenes("Program Add-in", program_name);
         var program_controller = FindObjectOfType<ProgramAddInController>();
-        program_controller.Exit += HandleProgramExit; ;
+        program_controller.Exit += HandleProgramExit;
     }
 
     private void HandleProgramExit()
     {
+        PriorProgramCursorHidden = false;
+        UpdateCursorState(PriorInMenu, false);
+
         LoadMenu();
     }
 
@@ -81,6 +89,10 @@ public class MainController : MonoBehaviour
     {
         await UnloadAllScenes();
         await LoadScenes("Menu");
+
+        PriorInMenu = true;
+        UpdateCursorState(true, PriorProgramCursorHidden);
+
         var menu_controller = FindObjectOfType<ProgramMenu>();
         menu_controller.ProgramSelected += HandleProgramSelected;
     }
@@ -90,6 +102,12 @@ public class MainController : MonoBehaviour
         LoadProgram(program_name);
     }
 
+    void UpdateCursorState(bool in_menu, bool program_cursor_hidden)
+    {
+        Cursor.visible = in_menu || !program_cursor_hidden;
+        //Cursor.lockState = in_menu || !program_cursor_locked ? CursorLockMode.None : CursorLockMode.Locked;
+    }
+
     void Start()
     {
         LoadMenu();
@@ -97,5 +115,6 @@ public class MainController : MonoBehaviour
 
     void Update()
     {
+        UpdateCursorState(PriorInMenu, PriorProgramCursorHidden);
     }
 }
