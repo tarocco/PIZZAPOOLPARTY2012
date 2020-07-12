@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Interactive Pizza.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/Interactive Pizza 2.unity
+    guid: e891aee9dd5f91b468f0b26ad8bcb60b
   m_configObjects: {}
