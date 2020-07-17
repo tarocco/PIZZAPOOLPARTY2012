@@ -65,16 +65,21 @@ public class MainController : MonoBehaviour
                 await Task.Yield();
     }
 
-    public async Task LoadProgram(string program_name)
+    public async Task LoadProgram(string program_id)
     {
         PriorInMenu = false;
         PriorProgramCursorHidden = false;
         UpdateCursorState(false, false);
 
         await UnloadAllScenes();
-        await LoadScenes("Program Add-in", program_name);
+        await LoadScenes("Program Add-in", program_id);
         var program_controller = FindObjectOfType<ProgramAddInController>();
         program_controller.Exit += HandleProgramExit;
+    }
+
+    public void StartLoadProgram(string program_id)
+    {
+        LoadProgram(program_id);
     }
 
     private void HandleProgramExit()

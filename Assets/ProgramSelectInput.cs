@@ -4,8 +4,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ProgramMenu : MonoBehaviour
+public class ProgramSelectInput : MonoBehaviour
 {
+    [Serializable]
+    public struct Entry
+    {
+        public KeyCode KeyCode;
+        public string ProgramId;
+    }
+
+    [SerializeField]
+    private List<Entry> _Entries;
+
+    public IReadOnlyList<Entry> Entries
+    {
+        get { return _Entries; }
+    }
+
     [SerializeField]
     private ProgramSelectEvent _ProgramSelected = new ProgramSelectEvent();
 
@@ -20,12 +35,6 @@ public class ProgramMenu : MonoBehaviour
         _ProgramSelected.Invoke(id);
     }
 
-
-    public void SelectProgram(string id)
-    {
-        OnProgramSelected(id);
-    }
-
     void Start()
     {
         
@@ -33,6 +42,10 @@ public class ProgramMenu : MonoBehaviour
 
     void Update()
     {
-        
+        foreach(var entry in Entries)
+        {
+            if (Input.GetKeyDown(entry.KeyCode))
+                OnProgramSelected(entry.ProgramId);
+        }
     }
 }
